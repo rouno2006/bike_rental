@@ -1,0 +1,58 @@
+{% extends 'rental/base.html' %}
+
+{% block content %}
+<section class="hero-banner text-center mb-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Ride Your Dream Bike Today</h1>
+        <p class="lead">Select from top brands like BMW, Kawasaki, Triumph, and Premium EVs.</p>
+    </div>
+</section>
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h3 class="fw-bold mb-0">Available Fleet</h3>
+    
+    <div class="btn-group flex-wrap">
+        <a href="{% url 'home' %}" class="btn btn-sm {% if not selected_type %}btn-dark{% else %}btn-outline-dark{% endif %}">All</a>
+        {% for key, value in bike_types %}
+            <a href="?type={{ key }}" class="btn btn-sm {% if selected_type == key %}btn-dark{% else %}btn-outline-dark{% endif %}">{{ value }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+    <div class="row g-4">
+        {% for bike in bikes %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card bike-card h-100 shadow-sm border-0">
+                {% if bike.image %}
+                    <img src="{{ bike.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <img src="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=600&q=80" class="card-img-top" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="fw-bold mb-0">{{ bike.bike_name }}</h5>
+                        <span class="badge bg-dark">{{ bike.brand.brand_name }}</span>
+                    </div>
+                    
+                    <div class="small text-muted mb-3 d-flex gap-3">
+                        <span><i class="bi bi-ev-station"></i> {{ bike.fuel }}</span>
+                        <span><i class="bi bi-speedometer2"></i> {{ bike.cc }}</span>
+                        <span><i class="bi bi-palette"></i> {{ bike.color }}</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <h5 class="text-success fw-bold mb-0">₹{{ bike.price_per_day }}<small class="text-muted fs-6">/day</small></h5>
+                        <a href="{% url 'bike_detail' bike.id %}" class="btn btn-primary btn-sm">Rent Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center text-muted py-5">
+            <h4>No bikes available right now.</h4>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
