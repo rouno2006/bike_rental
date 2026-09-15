@@ -1,0 +1,100 @@
+{% extends 'rental/base.html' %}
+
+{% block content %}
+<style>
+    /* Full page background looks */
+    body {
+        background-color: #a0b1e9 !important; 
+    }
+
+    /* Bike card's style */
+    .card {
+        border: none !important;
+        border-radius: 15px !important;
+        background: #ffffff;
+        box-shadow: 0 15px px rgba(0, 0, 0, 0.95); /* Lite Shadow */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+
+    /* Animation */
+    .card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 25px 50px rgb(0, 0, 0); /* Incrise the Shadow doing Hover */
+    }
+
+    /* 'Available Fleet' Writting Style */
+    h2, h3 {
+        color: #2c3e50;
+        font-weight: 800;
+    }
+</style>
+<section class="hero-banner text-center mb-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Ride Your Dream Bike Today</h1>
+        <p class="lead">Select from top brands like BMW, Kawasaki, Triumph, and Premium EVs.</p>
+    </div>
+</section>
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h3 class="fw-bold mb-0">Available Fleet</h3>
+    
+    <div class="btn-group flex-wrap">
+        <a href="{% url 'home' %}" class="btn btn-sm {% if not selected_type %}btn-dark{% else %}btn-outline-dark{% endif %}">All</a>
+        {% for key, value in bike_types %}
+            <a href="?type={{ key }}" class="btn btn-sm {% if selected_type == key %}btn-dark{% else %}btn-outline-dark{% endif %}">{{ value }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+    <div class="row g-4">
+        {% for bike in bikes %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card bike-card h-100 shadow-sm border-0">
+                {% if bike.image %}
+                    <img src="{{ bike.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <img src="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=600&q=80" class="card-img-top" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="fw-bold mb-0">{{ bike.bike_name }}</h5>
+                        <span class="badge bg-dark">{{ bike.brand.brand_name }}</span>
+                    </div>
+                    
+                    <div class="small text-muted mb-3 d-flex gap-3">
+                        <span><i class="bi bi-ev-station"></i> {{ bike.fuel }}</span>
+                        <span><i class="bi bi-speedometer2"></i> {{ bike.cc }}</span>
+                        <span><i class="bi bi-palette"></i> {{ bike.color }}</span>
+                        <span class="text-muted mx-2">
+                            <i class="fas fa-shield-alt"></i> ABS: 
+                            {% if bike.abs_function %}
+                                <span class="text-success">Yes</span>
+                            {% else %}
+                                <span class="text-danger">No</span>
+                            {% endif %}
+                        </span>
+                        <span class="text-muted mx-2">
+                            <i class="fas fa-road"></i> {{ bike.mileage }}
+                        </span>
+                        <span class="text-muted mx-2">
+                            <i class="fas fa-tachometer-alt"></i> {{ bike.top_speed }}
+                        </span>                        
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <h5 class="text-success fw-bold mb-0">₹{{ bike.price_per_day }}<small class="text-muted fs-6">/day</small></h5>
+                        <a href="{% url 'bike_detail' bike.id %}" class="btn btn-primary btn-sm">Rent Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center text-muted py-5">
+            <h4>No bikes available right now.</h4>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
