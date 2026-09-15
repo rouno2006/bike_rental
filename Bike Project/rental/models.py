@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
 class CustomUser(AbstractUser):
     drivelicense=models.CharField(max_length=50)
     mobile=models.CharField(max_length=12)
@@ -46,13 +45,16 @@ class Bike(models.Model):
     seats=models.CharField(max_length=2)
     is_active = models.BooleanField(default=True)
     image = models.ImageField(upload_to='bikes/', blank=True, null=True)
+    
+    # NEW FIELDS ADDED HERE
+    abs_function = models.BooleanField(default=False, help_text="True for Yes, False for No")
+    mileage = models.CharField(max_length=50, help_text="e.g., 40 kmpl", blank=True, null=True)
+    top_speed = models.CharField(max_length=50, help_text="e.g., 120 kmph", blank=True, null=True)
 
     def __str__(self):
         return f"{self.bike_name} ({self.bike_number})"
 
-# NEW BOOKING MODEL
 class Booking(models.Model):
-
     BOOKING_STATUS = [
         ('booked', 'Booked'),
         ('cancelled', 'Cancelled'),
@@ -87,3 +89,4 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.bike.bike_name}"
+    

@@ -9,5 +9,6 @@ urlpatterns = [
     path('cancel-booking/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
     path('register/', views.register, name='register'),
     path('login/', auth_views.LoginView.as_view(template_name='rental/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
+    path('logout/', views.custom_logout, name='logout'),
+    path('vehicles/', views.vehicles, name='vehicles')
 ]
