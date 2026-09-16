@@ -1,0 +1,45 @@
+{% extends 'rental/base.html' %}
+{% block content %}
+<div class="container text-center" style="margin-top: 100px; margin-bottom: 100px;">
+    <h2 class="fw-bold mb-4">Complete Your Payment</h2>
+    <p class="lead">You are booking <strong>{{ booking.bike.bike_name }}</strong>.</p>
+    <h4 class="text-success mb-4">Total Amount: ₹{{ booking.total_amount }}</h4>
+    
+    <!-- Razorpay Checkout Form -->
+    <form action="{% url 'payment_success' booking.id %}" method="POST">
+        {% csrf_token %}
+        <script
+            src="https://checkout.razorpay.com/v1/checkout.js"
+            data-key="{{ razorpay_merchant_key }}"
+            data-amount="{{ razorpay_amount }}"
+            data-currency="INR"
+            data-order_id="{{ razorpay_order_id }}"
+            data-buttontext="Pay Now"
+            data-name="MotorHub Rental"
+            data-description="Bike Booking Payment"
+            data-image="https://cdn-icons-png.flaticon.com/512/3202/3202926.png"
+            data-prefill.name="{{ user.first_name }} {{ user.last_name }}"
+            data-prefill.email="{{ user.email }}"
+            data-theme.color="#ffcc00">
+        </script>
+    </form>
+</div>
+
+<!-- Set a Default Button Style of Razorpay -->
+<style>
+    .razorpay-payment-button {
+        background-color: #ffcc00;
+        color: #1a1a1a;
+        font-weight: bold;
+        border: none;
+        padding: 12px 35px;
+        border-radius: 5px;
+        font-size: 18px;
+        transition: 0.3s;
+    }
+    .razorpay-payment-button:hover {
+        background-color: #e6a600;
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
