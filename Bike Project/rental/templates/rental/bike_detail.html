@@ -1,0 +1,135 @@
+{% extends 'rental/base.html' %}
+{% block content %}
+<style>
+    /* ডার্ক থিমের টেবিলের জন্য স্পেশাল ডিজাইন */
+    .spec-table {
+        width: 100%;
+        color: #94a3b8;
+        font-size: 0.95rem;
+    }
+    .spec-table th {
+        font-weight: 600;
+        padding: 12px 0;
+        color: #f8fafc;
+        border-bottom: 1px solid #334155;
+        width: 40%;
+    }
+    .spec-table td {
+        padding: 12px 0;
+        border-bottom: 1px solid #334155;
+    }
+    /* ক্যালেন্ডার আইকন সাদা করার জন্য */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+        cursor: pointer;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="theme-dark-card p-4 p-md-5 shadow-lg">
+                <div class="row g-5">
+                    
+                    <!-- Left Side: Bike Image & Details -->
+                    <div class="col-md-6">
+                        <!-- Image -->
+                        <div class="text-center mb-4">
+                            {% if bike.image %}
+                            <img src="{{ bike.image.url }}" class="img-fluid rounded" alt="{{ bike.bike_name }}" style="width: 100%; height: 280px; object-fit: cover; border: 1px solid #334155;">
+                            {% else %}
+                            <div class="rounded d-flex align-items-center justify-content-center" style="height: 280px; background-color: #0f172a; border: 1px solid #334155;">
+                                <i class="fas fa-motorcycle fa-5x text-muted"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Title & Price -->
+                        <h2 class="fw-bold mb-1" style="color: #f8fafc;">{{ bike.bike_name }}</h2>
+                        <p class="text-muted small mb-3">{{ bike.brand.brand_name }} | {{ bike.model_year }} Model | Reg: {{ bike.bike_number }}</p>
+                        <h3 class="fw-bold mb-4" style="color: #a5b4fc;">₹{{ bike.price_per_day }} <span class="small text-muted" style="font-size: 16px;">/ day</span></h3>
+
+                        <!-- Specifications Table -->
+                        <h5 class="fw-bold mb-3" style="color: #f8fafc;">Specifications</h5>
+                        <table class="spec-table mb-4 mb-md-0">
+                            <tbody>
+                                <tr>
+                                    <th>Type:</th>
+                                    <td>{{ bike.get_bike_type_display }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Engine:</th>
+                                    <td>{{ bike.cc }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Fuel:</th>
+                                    <td>{{ bike.fuel }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Mileage:</th>
+                                    <td>{% if bike.mileage %}{{ bike.mileage }}{% else %}N/A{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Top Speed:</th>
+                                    <td>{% if bike.top_speed %}{{ bike.top_speed }}{% else %}N/A{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>ABS Function:</th>
+                                    <td>
+                                        {% if bike.abs_function %}
+                                        <span class="badge bg-success">Yes</span>
+                                        {% else %}
+                                        <span class="badge bg-danger">No</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Right Side: Booking Form -->
+                    <div class="col-md-6">
+                        <div class="p-4 rounded" style="background-color: #0f172a; border: 1px solid #334155; height: 100%;">
+                            <h4 class="fw-bold mb-4" style="border-bottom: 2px solid #334155; padding-bottom: 15px; color: #f8fafc;">Book This Ride</h4>
+                            
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="mb-4">
+                                    <label class="form-label text-muted small text-uppercase" style="letter-spacing: 1px;">Pickup Date</label>
+                                    {{ form.from_date }}
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label text-muted small text-uppercase" style="letter-spacing: 1px;">Drop Date</label>
+                                    {{ form.to_date }}
+                                </div>
+                                
+                                <div class="mt-5">
+                                    <button type="submit" class="btn btn-theme btn-lg w-100 shadow">
+                                        Continue to Address <i class="fas fa-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- জাভাস্ক্রিপ্ট: ফর্মের ইনপুটগুলোতে ডার্ক থিম ক্লাস অ্যাড করার জন্য -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let inputs = document.querySelectorAll('input[type="date"]');
+        inputs.forEach(input => {
+            input.classList.add('theme-dark-input');
+            // ডিফল্ট বুটস্ট্র্যাপ ক্লাস রিমুভ করে দেওয়া হলো যাতে আমাদের ডিজাইন কাজ করে
+            input.classList.remove('form-control');
+            // একটু প্যাডিং দিয়ে সুন্দর করা হলো
+            input.style.padding = "10px 15px";
+            input.style.borderRadius = "6px";
+            input.style.width = "100%";
+        });
+    });
+</script>
+{% endblock %}
