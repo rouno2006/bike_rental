@@ -1,0 +1,48 @@
+{% extends 'rental/base.html' %}
+{% block content %}
+<div class="container py-5" style="min-height: 80vh;">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">My Bookings</h2>
+        <div style="width: 50px; height: 3px; background-color: #818cf8; margin: 15px auto;"></div>
+    </div>
+
+    {% if bookings %}
+        <div class="row g-4">
+            {% for booking in bookings %}
+            <div class="col-md-6 col-lg-4">
+                <div class="theme-dark-card p-4 h-100 position-relative">
+                    
+                    <!-- স্ট্যাটাস ব্যাজ (পেমেন্ট হলে সবুজ, পেন্ডিং হলে হলুদ) -->
+                    <span class="badge position-absolute" style="top: 15px; right: 15px; {% if booking.booking_status == 'booked' %}background-color: #10b981;{% else %}background-color: #f59e0b;{% endif %}">
+                        {{ booking.booking_status|title }}
+                    </span>
+
+                    <h5 class="fw-bold mb-3" style="padding-right: 60px;">{{ booking.bike.bike_name }}</h5>
+                    
+                    <div class="text-muted small mb-3">
+                        <p class="mb-1"><i class="fas fa-calendar-alt me-2" style="color: #818cf8;"></i><strong>From:</strong> {{ booking.from_date }}</p>
+                        <p class="mb-1"><i class="fas fa-calendar-check me-2" style="color: #818cf8;"></i><strong>To:</strong> {{ booking.to_date }}</p>
+                        {% if booking.delivery_address %}
+                        <p class="mb-0"><i class="fas fa-map-marker-alt me-2" style="color: #818cf8;"></i><strong>Drop:</strong> {{ booking.delivery_address.address_label }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mt-auto pt-3" style="border-top: 1px solid #334155;">
+                        <p class="mb-0 text-muted">Total Paid: <strong style="color: #f8fafc; font-size: 1.1rem;">₹{{ booking.total_amount }}</strong></p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- যদি কোনো বুকিং না থাকে -->
+        <div class="text-center mt-5">
+            <div class="mb-4">
+                <i class="fas fa-folder-open fa-4x" style="color: #334155;"></i>
+            </div>
+            <h4 class="text-muted">You haven't booked any rides yet.</h4>
+            <a href="{% url 'home' %}" class="btn btn-theme mt-3">Explore Bikes</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

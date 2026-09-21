@@ -1,0 +1,58 @@
+{% extends 'rental/base.html' %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="theme-dark-card p-4 p-md-5 text-center shadow-lg">
+                <div class="mb-4">
+                    <i class="fas fa-wallet fa-3x mb-3" style="color: #a5b4fc;"></i>
+                    <h3 class="fw-bold mb-2">Complete Payment</h3>
+                    <p class="text-muted">You are booking <strong>{{ booking.bike.bike_name }}</strong></p>
+                </div>
+
+                <div class="p-3 mb-4 rounded" style="background-color: #0f172a; border: 1px dashed #334155;">
+                    <h5 class="mb-0 text-muted">Total Amount: <span class="fw-bold fs-4 ms-2" style="color: #f8fafc;">₹{{ booking.total_amount }}</span></h5>
+                </div>
+
+                <!-- Razorpay Form -->
+                <form action="{% url 'payment_success' booking.id %}" method="POST">
+                    {% csrf_token %}
+                    <script
+                        src="https://checkout.razorpay.com/v1/checkout.js"
+                        data-key="{{ razorpay_merchant_key }}"
+                        data-amount="{{ razorpay_amount }}"
+                        data-currency="INR"
+                        data-order_id="{{ razorpay_order_id }}"
+                        data-buttontext="Pay Now securely"
+                        data-name="MotorHub"
+                        data-description="Bike Rental Payment"
+                        data-theme.color="#818cf8"
+                    ></script>
+                    <input type="hidden" custom="Hidden Element" name="hidden">
+                </form>
+                
+                <p class="small text-muted mt-4 mb-0"><i class="fas fa-shield-alt me-1"></i> Secure payment powered by Razorpay</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Razorpay ডিফল্ট বাটনকে ডার্ক থিমের সাথে মেলানোর জন্য CSS */
+    .razorpay-payment-button {
+        background-color: #a5b4fc !important;
+        color: #0f172a !important;
+        border: none !important;
+        padding: 12px 30px !important;
+        font-size: 18px !important;
+        font-weight: 600 !important;
+        border-radius: 6px !important;
+        width: 100% !important;
+        transition: 0.3s !important;
+    }
+    .razorpay-payment-button:hover {
+        background-color: #818cf8 !important;
+        color: #ffffff !important;
+    }
+</style>
+{% endblock %}
